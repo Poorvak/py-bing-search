@@ -1,9 +1,9 @@
-from setuptools import setup, find_packages
-import os
-import platform
+"""Setup modeule."""
+from setuptools import setup
 
-DESCRIPTION = "A simple lightweight python wrapper for the Azure Bing Search API."
-VERSION = '0.2.0'
+DESCRIPTION = """A simple lightweight python wrapper
+                 for the Azure Bing Search API."""
+VERSION = '0.3.0'
 LONG_DESCRIPTION = None
 try:
     LONG_DESCRIPTION = open('README.md').read()
@@ -27,12 +27,11 @@ INSTALL_REQUIRES = [
 
 setup(
     name='py-bing-search',
-    packages = ['py_bing_search'],
-    #py_modules=['py_bing_search'],
+    packages=['py_bing_search'],
     version=VERSION,
-    author=u'Tristan Tao',
-    author_email='tristan@teamleada.com',
-    url='https://github.com/tristantao/py-bing-search',
+    author=u'Poorvak Kapoor',
+    author_email='poorvak.kapoor@cube26.com',
+    url='https://github.com/Poorvak/py-bing-search',
     license='MIT',
     keywords=KEYWORDS,
     description=DESCRIPTION,
