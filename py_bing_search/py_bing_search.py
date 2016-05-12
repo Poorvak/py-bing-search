@@ -18,7 +18,7 @@ class PyBingException(Exception):
 class PyBingSearch(object):
     """Parent class for the individual search."""
 
-    def __init__(self, api_key, query, query_base, safe=None):
+    def __init__(self, api_key, query, query_base):
         """
         Constructor method.
 
@@ -30,10 +30,7 @@ class PyBingSearch(object):
         query_base: API end-point
         """
         self.api_key = api_key
-        if not safe:
-            safe = False
-        self.safe = safe
-        self.current_offset = 0
+        self.offset = constants.OFFSET
         self.query = query
         self.QUERY_URL = query_base
 
@@ -79,16 +76,12 @@ class PyBingWebSearch(PyBingSearch):
 
     def __init__(self,
                  api_key,
-                 query,
-                 safe=None):
+                 query):
         """Default Constructor for making object for api_key."""
-        if not safe:
-            safe = constants.SAFE
-        PyBingSearch.__init__(self=self,
+        PyBingSearch.__init__(self,
                               api_key=api_key,
                               query=query,
-                              query_base=self.WEB_QUERY_BASE,
-                              safe=safe)
+                              query_base=self.WEB_QUERY_BASE)
 
     def _search(self,
                 limit=None,
@@ -160,16 +153,12 @@ class PyBingImageSearch(PyBingSearch):
 
     def __init__(self,
                  api_key,
-                 query,
-                 safe=None):
+                 query):
         """Default Constructor."""
-        if not safe:
-            safe = constants.SAFE
         PyBingSearch.__init__(self,
                               api_key=api_key,
                               query=query,
-                              query_base=self.IMAGE_QUERY_BASE,
-                              safe=safe)
+                              query_base=self.IMAGE_QUERY_BASE)
 
     def _search(self,
                 limit=None,
@@ -200,7 +189,7 @@ class PyBingImageSearch(PyBingSearch):
             json_results = json_results.get('results', None)
         packaged_results = [ImageResult(single_result_json)
                             for single_result_json in json_results]
-        self.current_offset += len(packaged_results)
+        self.offset += len(packaged_results)
         return packaged_results
 
 
@@ -247,13 +236,12 @@ class PyBingVideoSearch(PyBingSearch):
 
     VIDEO_QUERY_BASE = constants.QUERY_BASE
 
-    def __init__(self, api_key, query, safe=False):
+    def __init__(self, api_key, query):
         """Default Constructor."""
         PyBingSearch.__init__(self,
                               api_key=api_key,
                               query=query,
-                              query_base=self.VIDEO_QUERY_BASE,
-                              safe=safe)
+                              query_base=self.VIDEO_QUERY_BASE)
 
     def _search(self,
                 limit=None,
@@ -284,7 +272,7 @@ class PyBingVideoSearch(PyBingSearch):
             json_results = json_results.get('results', None)
         packaged_results = [VideoResult(single_result_json)
                             for single_result_json in json_results]
-        self.current_offset += len(packaged_results)
+        self.offset += len(packaged_results)
         return packaged_results
 
 
@@ -328,13 +316,12 @@ class PyBingNewsSearch(PyBingSearch):
 
     NEWS_QUERY_BASE = constants.QUERY_BASE
 
-    def __init__(self, api_key, query, safe=False):
+    def __init__(self, api_key, query):
         """Default Constructor."""
         PyBingSearch.__init__(self,
                               api_key=api_key,
                               query=query,
-                              query_base=self.NEWS_QUERY_BASE,
-                              safe=safe)
+                              query_base=self.NEWS_QUERY_BASE)
 
     def _search(self,
                 limit=None,
@@ -365,7 +352,7 @@ class PyBingNewsSearch(PyBingSearch):
             json_results = json_results.get('results', None)
         packaged_results = [NewsResult(single_result_json)
                             for single_result_json in json_results]
-        self.current_offset += len(packaged_results)
+        self.offset += len(packaged_results)
         return packaged_results
 
 
