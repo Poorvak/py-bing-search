@@ -100,7 +100,8 @@ class PyBingWebSearch(PyBingSearch):
                 "'{}'".format(self.query)),
             limit=limit,
             offset=offset,
-            format=format)
+            format='json')
+        print url
         # Need to find the optimal procedure for this
         res = requests.get(url, auth=("", self.api_key))
         try:
@@ -112,10 +113,23 @@ class PyBingWebSearch(PyBingSearch):
         json_results = json_results.get('d', list())
         if json_results:
             json_results = json_results.get('results', list())
-        packaged_results = [WebResult(result=single_result_json)
+        packaged_results = []
+        packaged_results = [make_dict(result=single_result_json)
                             for single_result_json in json_results]
-        self.offset += len(packaged_results)
         return packaged_results
+
+
+def make_dict(result):
+    """Converting result to dict."""
+    response = dict()
+    response.update(
+        {
+            'url': result.get('Url', None),
+            'title': result.get('Title', None),
+            'description': result.get('Description', None),
+            'id': result.get('ID', None)
+        })
+    return response
 
 
 class WebResult(object):
