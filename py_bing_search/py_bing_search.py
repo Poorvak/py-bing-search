@@ -101,7 +101,6 @@ class PyBingWebSearch(PyBingSearch):
             limit=limit,
             offset=offset,
             format='json')
-        print url
         # Need to find the optimal procedure for this
         res = requests.get(url, auth=("", self.api_key))
         try:
