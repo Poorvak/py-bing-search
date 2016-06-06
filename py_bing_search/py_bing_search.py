@@ -126,7 +126,10 @@ def make_dict(result):
             'url': result.get('Url', None),
             'title': result.get('Title', None),
             'description': result.get('Description', None),
-            'id': result.get('ID', None)
+            'id': result.get('ID', None),
+            'item_id': None,
+            'card_type': 1,
+            'icon_url': None
         })
     return response
 
