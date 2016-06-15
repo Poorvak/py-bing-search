@@ -102,6 +102,7 @@ class PyBingWebSearch(PyBingSearch):
             offset=offset,
             format='json')
         # Need to find the optimal procedure for this
+        print url
         res = requests.get(url, auth=("", self.api_key))
         try:
             json_results = res.json()
@@ -129,6 +130,7 @@ def make_dict(result):
             'id': result.get('ID', None),
             'item_id': None,
             'card_type': 1,
+            'action_type': 1,
             'icon_url': None
         })
     return response
@@ -396,3 +398,8 @@ class NewsResult(object):
         self.description = result['Description']
         self.date = result['Date']
         self.meta = self._Meta(result['__metadata'])
+
+if __name__ == '__main__':
+    py_bing_object = PyBingWebSearch(api_key='4LJ7+xATc44XCQjc79PE8H068Ye0MpOgFMC5hDR3Y4g',
+                                     query='sex')
+    print py_bing_object.search(offset=0, limit=10, return_format='json')
