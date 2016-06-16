@@ -128,6 +128,8 @@ def make_dict(result):
             'title': result.get('Title', None),
             'description': result.get('Description', None),
             'card_type': 1,
+            'icon_url': None,
+            'provider_icon_url': None,
             'action_type': 1,
         })
     return response
@@ -397,6 +399,8 @@ class NewsResult(object):
         self.meta = self._Meta(result['__metadata'])
 
 if __name__ == '__main__':
-    py_bing_object = PyBingWebSearch(api_key='4LJ7+xATc44XCQjc79PE8H068Ye0MpOgFMC5hDR3Y4g',
+    py_bing_object = PyBingWebSearch(api_key=constants.API_KEY,
                                      query='sex')
-    print py_bing_object.search(offset=0, limit=10, return_format='json')
+    print py_bing_object.search(offset=0,
+                                limit=10,
+                                return_format='json')
