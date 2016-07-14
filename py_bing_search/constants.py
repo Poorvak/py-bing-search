@@ -1,7 +1,7 @@
 """Constants file for specifying all constants values."""
 
 QUERY_BASE = "https://api.datamarket.azure.com/Bing/Search/{search_type}" \
-    + "?Query={query}&$top={limit}&$skip={offset}&$format={format}&$Adult='Off'&$Market='en-IN'"
+    + "?Query={query}&$top={limit}&$skip={offset}&$format={format}&$adult='Off'&$market='en-IN'"
 
 LIMIT = 10
 
