@@ -4,9 +4,11 @@ Py Bin Search main class.
 This code is a fork and is improved over the repo
 "https://github.com/tristantao/py-bing-search.git"
 """
+import httplib
 import urllib2
 import requests
 import constants
+import _bing_search_v2
 
 
 class PyBingException(Exception):
@@ -18,23 +20,33 @@ class PyBingException(Exception):
 class PyBingSearch(object):
     """Parent class for the individual search."""
 
-    def __init__(self, api_key, query, query_base):
+    def __init__(self, api_key, query, query_base, version=None):
         """
         Constructor method.
 
         Takes in the API_KEY and checks for pagination
         Arguments:
-        ----------
+        ----------------
         api_key : Generated from BING Console
         query: search_text
         query_base: API end-point
+
         """
+        if not version:
+            version = 1
         self.api_key = api_key
         self.offset = constants.OFFSET
         self.query = query
         self.QUERY_URL = query_base
+        self.version = version
+        try:
+            self.conn = httplib.HTTPSConnection('bingapis.azure-api.net')
+        except Exception as e:
+            print e
 
-    def search(self, limit=None, offset=None, return_format=None):
+    def search(self, limit=None,
+               offset=None, return_format=None,
+               version=None):
         """Return the result list, and also the uri for next page."""
         if not limit:
             limit = constants.LIMIT
@@ -42,9 +54,12 @@ class PyBingSearch(object):
             offset = constants.OFFSET
         if not return_format:
             return_format = constants.RETURN_FORMAT
+        if not version:
+            version = self.version
         return self._search(limit=limit,
                             offset=offset,
-                            format=return_format)
+                            format=return_format,
+                            version=version)
 
     # def search_all(self, limit=None, return_format=None):
     #     """Return a single list containing up to 'limit' Result objects."""
@@ -76,17 +91,22 @@ class PyBingWebSearch(PyBingSearch):
 
     def __init__(self,
                  api_key,
-                 query):
+                 query,
+                 version=None):
         """Default Constructor for making object for api_key."""
+        if not version:
+            version = 1
         PyBingSearch.__init__(self,
                               api_key=api_key,
                               query=query,
-                              query_base=self.WEB_QUERY_BASE)
+                              query_base=self.WEB_QUERY_BASE,
+                              version=version)
 
     def _search(self,
                 limit=None,
                 offset=None,
-                format=None):
+                format=None,
+                version=None):
         """Return a list of result objects."""
         if not limit:
             limit = constants.LIMIT
@@ -94,22 +114,29 @@ class PyBingWebSearch(PyBingSearch):
             format = constants.RETURN_FORMAT
         if not offset:
             offset = constants.OFFSET
-        url = self.QUERY_URL.format(
-            search_type='Web',
-            query=urllib2.quote(
-                "'{}'".format(self.query)),
-            limit=limit,
-            offset=offset,
-            format='json')
-        # Need to find the optimal procedure for this
-        print url
-        res = requests.get(url, auth=("", self.api_key))
-        try:
-            json_results = res.json()
-        except ValueError:
-            raise PyBingWebException("[Error] Code:%s, Error:%s" % (
-                res.status_code,
-                res.text))
+        if not version:
+            version = self.version
+        if version == 1:
+            url = self.QUERY_URL.format(
+                search_type='Web',
+                query=urllib2.quote(
+                    "'{}'".format(self.query)),
+                limit=limit,
+                offset=offset,
+                format='json')
+            # Need to find the optimal procedure for this
+            res = requests.get(url, auth=("", self.api_key))
+            try:
+                json_results = res.json()
+            except ValueError:
+                raise PyBingWebException("[Error] Code:%s, Error:%s" % (
+                    res.status_code,
+                    res.text))
+        if version == 2:
+            json_results = _bing_search_v2.search_bing(conn=self.conn,
+                                                       search_text=self.query,
+                                                       offset=offset,
+                                                       limit=limit)
         json_results = json_results.get('d', list())
         if json_results:
             json_results = json_results.get('results', list())
