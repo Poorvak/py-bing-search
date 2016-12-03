@@ -9,17 +9,15 @@ conn=httplib.HTTPSConnection('api.cognitive.microsoft.com')
 
 
 def search_bing(search_text,
+                api_key,
                 offset=None,
                 limit=None,
                 market=None,
-                safesearch=None,
-                api_key=None):
+                safesearch=None):
     """Search bing method calls the BING Api for web results."""
     # Request headers
     global conn
     headers = dict()
-    if not api_key:
-        api_key = constants.NEW_BING_API_KEY
     headers["Ocp-Apim-Subscription-Key"] = api_key
 
     if not limit:
@@ -63,11 +61,11 @@ def make_dict(item):
 
 
 def search_api_v2_dict(search_text,
+                       api_key,
                        offset=None,
                        limit=None,
                        market=None,
-                       safesearch=None,
-                       api_key=None):
+                       safesearch=None):
     """This method for search_api_v2 for making the response structure similar to v1."""
     resp = search_bing(search_text=search_text,
                        offset=offset,

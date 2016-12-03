@@ -87,13 +87,11 @@ class PyBingWebSearch(PyBingSearch):
 
     def __init__(self,
                  query,
-                 api_key=None,
+                 api_key,
                  version=None):
         """Default Constructor for making object for api_key."""
         if not version:
             version = 1
-        if not api_key:
-            api_key = constants.API_KEY
         PyBingSearch.__init__(self,
                               api_key=api_key,
                               query=query,
@@ -132,6 +130,7 @@ class PyBingWebSearch(PyBingSearch):
                     res.text))
         if version == 2:
             json_results = _bing_search_v2.search_api_v2_dict(search_text=self.query,
+                                                              api_key=self.api_key,
                                                               offset=offset,
                                                               limit=limit)
         print json_results
