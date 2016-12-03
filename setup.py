@@ -3,7 +3,7 @@ from setuptools import setup
 
 DESCRIPTION = """A simple lightweight python wrapper
                  for the Azure Bing Search API."""
-VERSION = '0.5.0'
+VERSION = '1.0.1'
 LONG_DESCRIPTION = None
 try:
     LONG_DESCRIPTION = open('README.md').read()

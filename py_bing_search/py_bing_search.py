@@ -39,10 +39,6 @@ class PyBingSearch(object):
         self.query = query
         self.QUERY_URL = query_base
         self.version = version
-        try:
-            self.conn = httplib.HTTPSConnection('bingapis.azure-api.net')
-        except Exception as e:
-            print e
 
     def search(self, limit=None,
                offset=None, return_format=None,
@@ -90,12 +86,14 @@ class PyBingWebSearch(PyBingSearch):
     WEB_QUERY_BASE = constants.QUERY_BASE
 
     def __init__(self,
-                 api_key,
                  query,
+                 api_key=None,
                  version=None):
         """Default Constructor for making object for api_key."""
         if not version:
             version = 1
+        if not api_key:
+            api_key = constants.API_KEY
         PyBingSearch.__init__(self,
                               api_key=api_key,
                               query=query,
@@ -133,14 +131,14 @@ class PyBingWebSearch(PyBingSearch):
                     res.status_code,
                     res.text))
         if version == 2:
-            json_results = _bing_search_v2.search_bing(conn=self.conn,
-                                                       search_text=self.query,
-                                                       offset=offset,
-                                                       limit=limit)
+            json_results = _bing_search_v2.search_api_v2_dict(search_text=self.query,
+                                                              offset=offset,
+                                                              limit=limit)
+        print json_results
         json_results = json_results.get('d', list())
         if json_results:
             json_results = json_results.get('results', list())
-        packaged_results = []
+        packaged_results = list()
         packaged_results = [make_dict(result=single_result_json)
                             for single_result_json in json_results]
         return packaged_results
