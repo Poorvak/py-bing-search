@@ -133,7 +133,6 @@ class PyBingWebSearch(PyBingSearch):
                                                               api_key=self.api_key,
                                                               offset=offset,
                                                               limit=limit)
-        print json_results
         json_results = json_results.get('d', list())
         if json_results:
             json_results = json_results.get('results', list())
