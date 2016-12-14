@@ -3,6 +3,7 @@ import ast
 import json
 import urllib
 import httplib
+import urlparse
 import constants
 
 conn=httplib.HTTPSConnection('api.cognitive.microsoft.com')
@@ -57,6 +58,12 @@ def make_dict(item):
     resp["Description"] = item.get("snippet", None)
     resp["Title"] = item.get("name", None)
     resp["Url"] = item.get("url", None)
+    if resp.get("Url"):
+        parsed = urlparse.urlparse(resp["Url"])
+        params = urlparse.parse_qsl(parsed.query)
+        for key, value in params:
+            if key == 'r':
+                resp.update({"Url": value})
     return resp
 
 
