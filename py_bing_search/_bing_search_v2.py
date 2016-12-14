@@ -6,7 +6,7 @@ import httplib
 import urlparse
 import constants
 
-conn=httplib.HTTPSConnection('api.cognitive.microsoft.com')
+conn = httplib.HTTPSConnection('api.cognitive.microsoft.com')
 
 
 def search_bing(search_text,
@@ -48,6 +48,7 @@ def search_bing(search_text,
         except ValueError:
             return_resp = dict()
     except Exception:
+        conn = httplib.HTTPSConnection('api.cognitive.microsoft.com')
         return_resp = dict()
     return return_resp
 
