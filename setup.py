@@ -22,12 +22,7 @@ CLASSIFIERS = [
 KEYWORDS = ['Azure', 'Bing', 'API', 'Search']
 
 INSTALL_REQUIRES = [
-    'requests',
-    'httplib',
-    'urllib',
-    'json',
-    'ast',
-    'urllib2'
+    'requests'
 ]
 
 setup(
