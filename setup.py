@@ -23,7 +23,6 @@ KEYWORDS = ['Azure', 'Bing', 'API', 'Search']
 
 INSTALL_REQUIRES = [
     'requests',
-    'urlparse',
     'httplib',
     'urllib',
     'json',
