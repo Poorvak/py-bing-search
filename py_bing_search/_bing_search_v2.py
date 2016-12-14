@@ -48,7 +48,7 @@ def search_bing(search_text,
         except ValueError:
             return_resp = dict()
     except Exception:
-        pass
+        return_resp = dict()
     return return_resp
 
 
