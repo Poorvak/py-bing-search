@@ -6,7 +6,7 @@ import httplib
 import urlparse
 import constants
 
-conn = httplib.HTTPSConnection('api.cognitive.microsoft.com')
+conn = httplib.HTTPSConnection(host="api.cognitive.microsoft.com", timeout=30*24*60*60)
 
 
 def search_bing(search_text,
