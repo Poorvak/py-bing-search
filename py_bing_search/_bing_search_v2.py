@@ -1,13 +1,11 @@
 """BING API v5 requestor module."""
-import ast
 import json
 import urllib
-import httplib
 import urlparse
+import requests
 import constants
 
-conn = httplib.HTTPSConnection(host="api.cognitive.microsoft.com", timeout=30*24*60*60)
-
+session = requests.session()
 
 def search_bing(search_text,
                 api_key,
@@ -17,7 +15,6 @@ def search_bing(search_text,
                 safesearch=None):
     """Search bing method calls the BING Api for web results."""
     # Request headers
-    global conn
     headers = dict()
     headers["Ocp-Apim-Subscription-Key"] = api_key
 
@@ -37,18 +34,11 @@ def search_bing(search_text,
     params = urllib.urlencode(dict(q=search_text, count=limit,
                                    offset=offset, mkt=market, safesearch=safesearch))
     try:
-        conn.request(method='GET',
-                     url='/bing/v5.0/search?%s' % params,
-                     body='{body}',
-                     headers=headers)
-        response = conn.getresponse()
-        data = json.dumps(response.read())
-        try:
-            return_resp = json.loads(data)
-        except ValueError:
-            return_resp = dict()
+        req = session.get(url="https://api.cognitive.microsoft.com/bing/v5.0/search",
+                          params=params,
+                          headers=headers)
+        return_resp = req.json()
     except Exception:
-        conn = httplib.HTTPSConnection('api.cognitive.microsoft.com')
         return_resp = dict()
     return return_resp
 
@@ -81,7 +71,6 @@ def search_api_v2_dict(search_text,
                        market=market,
                        safesearch=safesearch,
                        api_key=api_key)
-    resp = json.loads(resp)
     resp = resp.get("webPages", dict()).get("value", list())
     return dict(d=dict(results=[make_dict(item=item) for item in resp]))
 
